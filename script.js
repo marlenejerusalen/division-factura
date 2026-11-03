@@ -15,14 +15,20 @@ function calcular() {
     const cargoFijo25 =
         Number(document.getElementById("cargoFijo25").value);
 
-    const energia70 =
-        Number(document.getElementById("energia70").value);
+    const tamanoTramo1 =
+        Number(document.getElementById("tamanoTramo1").value);
 
-    const energia130 =
-        Number(document.getElementById("energia130").value);
+    const tamanoTramo2 =
+        Number(document.getElementById("tamanoTramo2").value);
 
-    const energia219 =
-        Number(document.getElementById("energia219").value);
+    const precioTramo1 =
+        Number(document.getElementById("precioTramo1").value);
+
+    const precioTramo2 =
+        Number(document.getElementById("precioTramo2").value);
+
+    const precioExcedente =
+        Number(document.getElementById("precioExcedente").value);
 
     const ivaEdesa =
         Number(document.getElementById("ivaEdesa").value);
@@ -85,6 +91,15 @@ function calcular() {
     }
 
 
+    if (tamanoTramo1 < 0 || tamanoTramo2 < 0) {
+
+        error.textContent =
+            "Los kWh de los tramos no pueden ser negativos.";
+
+        return;
+    }
+
+
     if (
         persona1Kwh < 0 ||
         persona1Kwh > totalKwh
@@ -121,9 +136,9 @@ function calcular() {
     // =========================
 
     // Cada persona tiene derecho a la mitad de cada tramo barato
-    // (35 kWh del de 70 y 65 kWh del de 130). Los kWh se usan en orden:
-    // primero el tramo de 70, después el de 130 y el resto va al
-    // excedente. Si una persona no llega a usar su mitad de un tramo,
+    // (por ejemplo, con tramos de 70 y 130 kWh: 35 y 65 kWh). Los kWh se
+    // usan en orden: primero el tramo 1, después el tramo 2 y el resto va
+    // al excedente. Si una persona no llega a usar su mitad de un tramo,
     // lo que le sobra lo usa la otra persona.
 
     function repartirTramo(capacidad, restante1, restante2) {
@@ -144,34 +159,34 @@ function calcular() {
     }
 
 
-    const [kwh70Persona1, kwh70Persona2] =
-        repartirTramo(70, persona1Kwh, persona2Kwh);
+    const [kwhTramo1Persona1, kwhTramo1Persona2] =
+        repartirTramo(tamanoTramo1, persona1Kwh, persona2Kwh);
 
 
-    const [kwh130Persona1, kwh130Persona2] =
+    const [kwhTramo2Persona1, kwhTramo2Persona2] =
         repartirTramo(
-            130,
-            persona1Kwh - kwh70Persona1,
-            persona2Kwh - kwh70Persona2
+            tamanoTramo2,
+            persona1Kwh - kwhTramo1Persona1,
+            persona2Kwh - kwhTramo1Persona2
         );
 
 
-    const kwh219Persona1 =
-        persona1Kwh - kwh70Persona1 - kwh130Persona1;
+    const kwhExcedentePersona1 =
+        persona1Kwh - kwhTramo1Persona1 - kwhTramo2Persona1;
 
 
-    const kwh219Persona2 =
-        persona2Kwh - kwh70Persona2 - kwh130Persona2;
+    const kwhExcedentePersona2 =
+        persona2Kwh - kwhTramo1Persona2 - kwhTramo2Persona2;
 
 
-    const kwh70Total =
-        kwh70Persona1 + kwh70Persona2;
+    const kwhTramo1Total =
+        kwhTramo1Persona1 + kwhTramo1Persona2;
 
-    const kwh130Total =
-        kwh130Persona1 + kwh130Persona2;
+    const kwhTramo2Total =
+        kwhTramo2Persona1 + kwhTramo2Persona2;
 
-    const kwh219Total =
-        kwh219Persona1 + kwh219Persona2;
+    const kwhExcedenteTotal =
+        kwhExcedentePersona1 + kwhExcedentePersona2;
 
 
     // =========================
@@ -224,42 +239,42 @@ function calcular() {
     // COSTO DE ENERGÍA
     // =========================
 
-    const lineaEnergia70 = centavos(kwh70Total * energia70);
+    const lineaTramo1 = centavos(kwhTramo1Total * precioTramo1);
 
-    const lineaEnergia130 = centavos(kwh130Total * energia130);
+    const lineaTramo2 = centavos(kwhTramo2Total * precioTramo2);
 
-    const lineaEnergia219 = centavos(kwh219Total * energia219);
+    const lineaExcedente = centavos(kwhExcedenteTotal * precioExcedente);
 
 
-    const [energia70Persona1, energia70Persona2] =
+    const [energiaTramo1Persona1, energiaTramo1Persona2] =
         repartir(
-            lineaEnergia70,
-            kwh70Total === 0 ? 0.5 : kwh70Persona1 / kwh70Total
+            lineaTramo1,
+            kwhTramo1Total === 0 ? 0.5 : kwhTramo1Persona1 / kwhTramo1Total
         );
 
-    const [energia130Persona1, energia130Persona2] =
+    const [energiaTramo2Persona1, energiaTramo2Persona2] =
         repartir(
-            lineaEnergia130,
-            kwh130Total === 0 ? 0.5 : kwh130Persona1 / kwh130Total
+            lineaTramo2,
+            kwhTramo2Total === 0 ? 0.5 : kwhTramo2Persona1 / kwhTramo2Total
         );
 
-    const [energia219Persona1, energia219Persona2] =
+    const [energiaExcedentePersona1, energiaExcedentePersona2] =
         repartir(
-            lineaEnergia219,
-            kwh219Total === 0 ? 0.5 : kwh219Persona1 / kwh219Total
+            lineaExcedente,
+            kwhExcedenteTotal === 0 ? 0.5 : kwhExcedentePersona1 / kwhExcedenteTotal
         );
 
 
     const energiaPersona1 =
-        energia70Persona1 +
-        energia130Persona1 +
-        energia219Persona1;
+        energiaTramo1Persona1 +
+        energiaTramo2Persona1 +
+        energiaExcedentePersona1;
 
 
     const energiaPersona2 =
-        energia70Persona2 +
-        energia130Persona2 +
-        energia219Persona2;
+        energiaTramo1Persona2 +
+        energiaTramo2Persona2 +
+        energiaExcedentePersona2;
 
 
     // =========================
@@ -412,39 +427,39 @@ function calcular() {
     // =========================
 
     document.getElementById(
-        "bloque70Persona1"
+        "bloqueTramo1Persona1"
     ).textContent =
-        numero(kwh70Persona1);
+        numero(kwhTramo1Persona1);
 
 
     document.getElementById(
-        "bloque130Persona1"
+        "bloqueTramo2Persona1"
     ).textContent =
-        numero(kwh130Persona1);
+        numero(kwhTramo2Persona1);
 
 
     document.getElementById(
-        "bloque219Persona1"
+        "bloqueExcedentePersona1"
     ).textContent =
-        numero(kwh219Persona1);
+        numero(kwhExcedentePersona1);
 
 
     document.getElementById(
-        "bloque70Persona2"
+        "bloqueTramo1Persona2"
     ).textContent =
-        numero(kwh70Persona2);
+        numero(kwhTramo1Persona2);
 
 
     document.getElementById(
-        "bloque130Persona2"
+        "bloqueTramo2Persona2"
     ).textContent =
-        numero(kwh130Persona2);
+        numero(kwhTramo2Persona2);
 
 
     document.getElementById(
-        "bloque219Persona2"
+        "bloqueExcedentePersona2"
     ).textContent =
-        numero(kwh219Persona2);
+        numero(kwhExcedentePersona2);
 
 
     // =========================
@@ -452,21 +467,21 @@ function calcular() {
     // =========================
 
     document.getElementById(
-        "energia70Persona1"
+        "energiaTramo1Persona1"
     ).textContent =
-        dinero(energia70Persona1);
+        dinero(energiaTramo1Persona1);
 
 
     document.getElementById(
-        "energia130Persona1"
+        "energiaTramo2Persona1"
     ).textContent =
-        dinero(energia130Persona1);
+        dinero(energiaTramo2Persona1);
 
 
     document.getElementById(
-        "energia219Persona1"
+        "energiaExcedentePersona1"
     ).textContent =
-        dinero(energia219Persona1);
+        dinero(energiaExcedentePersona1);
 
 
     document.getElementById(
@@ -476,21 +491,21 @@ function calcular() {
 
 
     document.getElementById(
-        "energia70Persona2"
+        "energiaTramo1Persona2"
     ).textContent =
-        dinero(energia70Persona2);
+        dinero(energiaTramo1Persona2);
 
 
     document.getElementById(
-        "energia130Persona2"
+        "energiaTramo2Persona2"
     ).textContent =
-        dinero(energia130Persona2);
+        dinero(energiaTramo2Persona2);
 
 
     document.getElementById(
-        "energia219Persona2"
+        "energiaExcedentePersona2"
     ).textContent =
-        dinero(energia219Persona2);
+        dinero(energiaExcedentePersona2);
 
 
     document.getElementById(
@@ -662,12 +677,25 @@ function extraerFactura(texto) {
         )
     ].map(m => numeroArgentino(m[1]));
 
-    const tramos = {};
+    // Los tramos vienen en orden: tramo 1, tramo 2 y el excedente.
+    // Sus kWh cambian de un mes a otro (por ejemplo 70/130 o 61/139).
+    const tramos = [];
+
+    const excedente = {};
 
     for (const m of texto.matchAll(
-        /Energia activa(?: excedente)? \(([\d.,]+) kWh \* ([\d.,]+) \$ \/ kWh\)/gi
+        /Energia activa( excedente)? \(([\d.,]+) kWh \* ([\d.,]+) \$ \/ kWh\)/gi
     )) {
-        tramos[numeroArgentino(m[1])] = numeroArgentino(m[2]);
+        const tramo = {
+            kwh: numeroArgentino(m[2]),
+            precio: numeroArgentino(m[3])
+        };
+
+        if (m[1]) {
+            Object.assign(excedente, tramo);
+        } else {
+            tramos.push(tramo);
+        }
     }
 
     const consumo = texto.match(/Activa (\d+) (\d+) [\d,]+ (\d+)/);
@@ -675,11 +703,11 @@ function extraerFactura(texto) {
     return {
         cargoFijo5: cargosFijos[0],
         cargoFijo25: cargosFijos[1],
-        energia70: tramos[70],
-        energia130: tramos[130],
-        energia219: Object.entries(tramos)
-            .filter(([kwh]) => Number(kwh) !== 70 && Number(kwh) !== 130)
-            .map(([, precio]) => precio)[0],
+        tamanoTramo1: tramos[0]?.kwh,
+        tamanoTramo2: tramos[1]?.kwh,
+        precioTramo1: tramos[0]?.precio,
+        precioTramo2: tramos[1]?.precio,
+        precioExcedente: excedente.precio,
         ivaEdesa: buscarImporte(
             texto, new RegExp("IVA Consumidor Final 21,00% " + importe, "i")
         ),

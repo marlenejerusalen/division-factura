@@ -87,7 +87,7 @@
 
                 <div class="field">
                     <label for="cargoFijo5">
-                        Cargo fijo · 5 días
+                        Cargo fijo · período 1
                     </label>
 
                     <input
@@ -101,7 +101,7 @@
 
                 <div class="field">
                     <label for="cargoFijo25">
-                        Cargo fijo · 25 días
+                        Cargo fijo · período 2
                     </label>
 
                     <input
@@ -114,13 +114,43 @@
 
 
                 <div class="field">
-                    <label for="energia70">
-                        Energía activa · 70 kWh
+                    <label for="tamanoTramo1">
+                        Tramo 1 · kWh
                     </label>
 
                     <input
                         type="number"
-                        id="energia70"
+                        id="tamanoTramo1"
+                        step="0.01"
+                        placeholder="kWh"
+                        value="70"
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label for="tamanoTramo2">
+                        Tramo 2 · kWh
+                    </label>
+
+                    <input
+                        type="number"
+                        id="tamanoTramo2"
+                        step="0.01"
+                        placeholder="kWh"
+                        value="130"
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label for="precioTramo1">
+                        Tramo 1 · precio por kWh
+                    </label>
+
+                    <input
+                        type="number"
+                        id="precioTramo1"
                         step="0.0001"
                         placeholder="$/kWh"
                     >
@@ -128,13 +158,13 @@
 
 
                 <div class="field">
-                    <label for="energia130">
-                        Energía activa · 130 kWh
+                    <label for="precioTramo2">
+                        Tramo 2 · precio por kWh
                     </label>
 
                     <input
                         type="number"
-                        id="energia130"
+                        id="precioTramo2"
                         step="0.0001"
                         placeholder="$/kWh"
                     >
@@ -142,13 +172,13 @@
 
 
                 <div class="field">
-                    <label for="energia219">
-                        Energía excedente · 219 kWh
+                    <label for="precioExcedente">
+                        Excedente · precio por kWh
                     </label>
 
                     <input
                         type="number"
-                        id="energia219"
+                        id="precioExcedente"
                         step="0.0001"
                         placeholder="$/kWh"
                     >
@@ -460,36 +490,17 @@
                         <tbody>
 
                             <tr>
-                                <td>70 kWh</td>
+                                <td>Tramo 1</td>
 
                                 <td>
-                                    <span id="bloque70Persona1">
+                                    <span id="bloqueTramo1Persona1">
                                         -
                                     </span>
                                     kWh
                                 </td>
 
                                 <td>
-                                    <span id="bloque70Persona2">
-                                        -
-                                    </span>
-                                    kWh
-                                </td>
-                            </tr>
-
-
-                            <tr>
-                                <td>130 kWh</td>
-
-                                <td>
-                                    <span id="bloque130Persona1">
-                                        -
-                                    </span>
-                                    kWh
-                                </td>
-
-                                <td>
-                                    <span id="bloque130Persona2">
+                                    <span id="bloqueTramo1Persona2">
                                         -
                                     </span>
                                     kWh
@@ -498,17 +509,36 @@
 
 
                             <tr>
-                                <td>219 kWh excedentes</td>
+                                <td>Tramo 2</td>
 
                                 <td>
-                                    <span id="bloque219Persona1">
+                                    <span id="bloqueTramo2Persona1">
                                         -
                                     </span>
                                     kWh
                                 </td>
 
                                 <td>
-                                    <span id="bloque219Persona2">
+                                    <span id="bloqueTramo2Persona2">
+                                        -
+                                    </span>
+                                    kWh
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>Excedente</td>
+
+                                <td>
+                                    <span id="bloqueExcedentePersona1">
+                                        -
+                                    </span>
+                                    kWh
+                                </td>
+
+                                <td>
+                                    <span id="bloqueExcedentePersona2">
                                         -
                                     </span>
                                     kWh
@@ -542,23 +572,23 @@
                         </span>
 
                         <p>
-                            Bloque 70
+                            Tramo 1
                             <strong>
-                                $<span id="energia70Persona1">-</span>
+                                $<span id="energiaTramo1Persona1">-</span>
                             </strong>
                         </p>
 
                         <p>
-                            Bloque 130
+                            Tramo 2
                             <strong>
-                                $<span id="energia130Persona1">-</span>
+                                $<span id="energiaTramo2Persona1">-</span>
                             </strong>
                         </p>
 
                         <p>
-                            Bloque 219
+                            Excedente
                             <strong>
-                                $<span id="energia219Persona1">-</span>
+                                $<span id="energiaExcedentePersona1">-</span>
                             </strong>
                         </p>
 
@@ -581,23 +611,23 @@
                         </span>
 
                         <p>
-                            Bloque 70
+                            Tramo 1
                             <strong>
-                                $<span id="energia70Persona2">-</span>
+                                $<span id="energiaTramo1Persona2">-</span>
                             </strong>
                         </p>
 
                         <p>
-                            Bloque 130
+                            Tramo 2
                             <strong>
-                                $<span id="energia130Persona2">-</span>
+                                $<span id="energiaTramo2Persona2">-</span>
                             </strong>
                         </p>
 
                         <p>
-                            Bloque 219
+                            Excedente
                             <strong>
-                                $<span id="energia219Persona2">-</span>
+                                $<span id="energiaExcedentePersona2">-</span>
                             </strong>
                         </p>
 
